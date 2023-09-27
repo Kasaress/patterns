@@ -1,0 +1,2 @@
+class UnknounPizzaTypeException(Exception):
+    pass
