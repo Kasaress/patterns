@@ -70,6 +70,10 @@ class FrozenClams:
 # Фабрики ингредиентов
 class PizzaIngredientFactory(ABC):
     @abstractmethod
+    def get_style(self):
+        """Возвращает стиль пиццы"""
+
+    @abstractmethod
     def create_dough(self):
         """Тесто"""
 
@@ -95,6 +99,10 @@ class PizzaIngredientFactory(ABC):
 
 
 class NYPizzaIngredientFactory(PizzaIngredientFactory):
+    def get_style(self):
+        """Возвращает стиль пиццы"""
+        return 'Нью-Йорк'
+
     def create_dough(self):
         return ThinCrustDough()
 
@@ -120,6 +128,10 @@ class NYPizzaIngredientFactory(PizzaIngredientFactory):
 
 
 class ChicagoPizzaIngredientFactory(PizzaIngredientFactory):
+    def get_style(self):
+        """Возвращает стиль пиццы"""
+        return 'Чикаго'
+
     def create_dough(self):
         return ThickDough()
 
