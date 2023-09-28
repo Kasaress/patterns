@@ -1,0 +1,2 @@
+class DoubleCreateSingletonException(Exception):
+    pass
