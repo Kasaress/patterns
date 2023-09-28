@@ -3,14 +3,11 @@ from support import print_delimiter
 
 
 if __name__ == "__main__":
-    # duck = RubberDuck()
-    # duck.perform_fly()
-    # duck.perform_quack()
     ducks_types = (
         MallardDuck, RedHeadDuck, RubberDuck
     )
-    for duck_type in ducks_types:
-        duck = duck_type()
-        duck.perform_fly()
-        duck.perform_quack()
+    for duck_type in ducks_types:  # type: ignore
+        duck = duck_type()  # type: ignore
+        duck.perform_fly()  # type: ignore
+        duck.perform_quack()  # type: ignore
         print_delimiter()
