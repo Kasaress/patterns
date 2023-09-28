@@ -1,4 +1,5 @@
-from stores_pizzas import ChicagoPizzaStore, NYPizzaStore
+from constants import PIZZAS
+from stores import ChicagoPizzaStore, NYPizzaStore
 
 
 def print_delimiter():
@@ -6,26 +7,12 @@ def print_delimiter():
 
 
 if __name__ == '__main__':
-    ny_store = NYPizzaStore()
-    chicago_store = ChicagoPizzaStore()
+    ny_store = NYPizzaStore()  # Создание пиццерии в Нью-Йоркском стиле
+    chicago_store = ChicagoPizzaStore()  # Создание пиццерии в Чикагском стиле
     print_delimiter()
-    ny_store.order_pizza('cheese')
-    print_delimiter()
-    chicago_store.order_pizza('cheese')
-    print_delimiter()
-    ny_store.order_pizza('pepperoni')
-    print_delimiter()
-    chicago_store.order_pizza('pepperoni')
-    print_delimiter()
-    ny_store.order_pizza('clam')
-    print_delimiter()
-    chicago_store.order_pizza('clam')
-    print_delimiter()
-    ny_store.order_pizza('veggie')
-    print_delimiter()
-    chicago_store.order_pizza('veggie')
-    print_delimiter()
-    ny_store.order_pizza('new')
-    print_delimiter()
-    chicago_store.order_pizza('new')
-    print_delimiter()
+    pizzas = list(PIZZAS.keys())
+    pizzas.append('new')  # Проверка обработки несуществующей пиццы
+    for store in (ny_store, chicago_store):  # Создание всех возможных пицц
+        for pizza_type in pizzas:
+            store.order_pizza(pizza_type)
+            print_delimiter()
