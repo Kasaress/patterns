@@ -1,7 +1,10 @@
-from abc import ABC, abstractmethod
+# для разнообразия кряканье наследуем от протокола,
+# а летучесть от ABC
+from abc import abstractmethod
+from typing import Protocol
 
 
-class QuackBehavior(ABC):
+class QuackBehavior(Protocol):
     @abstractmethod
     def quack(self):
         pass
@@ -19,5 +22,4 @@ class Squeak(QuackBehavior):
 
 class MuteQuack(QuackBehavior):
     def quack(self):
-        # print('*угрюмо молчит')
-        pass
+        print('*угрюмо молчит*')
