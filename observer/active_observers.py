@@ -18,7 +18,7 @@ class Subject(ABC):
 class ObserverActive(ABC):
 
     @abstractmethod
-    def update() -> None:
+    def update(self) -> None:
         pass
 
     def __repr__(self) -> None:
