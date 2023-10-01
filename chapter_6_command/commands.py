@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from devices import BaseDevice, Fan, Stereo
+from devices import (Fan, Light, Stereo, bedroom_light, kitchen_fan,
+                     kitchen_light, stereo)
 
 
 class Command(ABC):
@@ -24,9 +25,9 @@ class NoCommand(Command):
         print('Команда не установлена, нечего отменять.')
 
 
-class SimpleOnCommand(Command):
-    def __init__(self, device: BaseDevice) -> None:
-        self.device: BaseDevice = device
+class LightOnCommand(Command):
+    def __init__(self) -> None:
+        self.device: Light
 
     def excecute(self):
         self.device.on()
@@ -35,20 +36,40 @@ class SimpleOnCommand(Command):
         self.device.off()
 
 
-class SimpleOffCommand(Command):
-    def __init__(self, device: BaseDevice) -> None:
-        self.device: BaseDevice = device
+class LightOffCommand(Command):
+    def __init__(self) -> None:
+        self.device: Light
 
     def excecute(self):
         self.device.off()
 
     def undo(self):
         self.device.on()
+
+
+class KitchenLightOnCommand(LightOnCommand):
+    def __init__(self) -> None:
+        self.device: Light = kitchen_light
+
+
+class KitchenLightOffCommand(LightOffCommand):
+    def __init__(self) -> None:
+        self.device: Light = kitchen_light
+
+
+class BedroomLightOnCommand(LightOnCommand):
+    def __init__(self) -> None:
+        self.device: Light = bedroom_light
+
+
+class BedroomLightOffCommand(LightOffCommand):
+    def __init__(self) -> None:
+        self.device: Light = bedroom_light
 
 
 class StereoCDOnCommand(Command):
-    def __init__(self, device: Stereo) -> None:
-        self.device: Stereo = device
+    def __init__(self) -> None:
+        self.device: Stereo = stereo
 
     def excecute(self):
         self.device.on()
@@ -60,8 +81,8 @@ class StereoCDOnCommand(Command):
 
 
 class StereoCDOffCommand(Command):
-    def __init__(self, device: Stereo) -> None:
-        self.device: Stereo = device
+    def __init__(self) -> None:
+        self.device: Stereo = stereo
 
     def excecute(self):
         self.device.off()
@@ -73,8 +94,8 @@ class StereoCDOffCommand(Command):
 
 
 class StereoRadioOnCommand(Command):
-    def __init__(self, device: Stereo) -> None:
-        self.device: Stereo = device
+    def __init__(self) -> None:
+        self.device: Stereo = stereo
 
     def excecute(self):
         self.device.on()
@@ -86,8 +107,8 @@ class StereoRadioOnCommand(Command):
 
 
 class StereoRadioOffCommand(Command):
-    def __init__(self, device: Stereo) -> None:
-        self.device: Stereo = device
+    def __init__(self) -> None:
+        self.device: Stereo = stereo
 
     def excecute(self):
         self.device.off()
@@ -99,24 +120,80 @@ class StereoRadioOffCommand(Command):
 
 
 class KitchenFanOnCommand(Command):
-    def __init__(self, device: Fan) -> None:
-        self.device: Fan = device
+    def __init__(self) -> None:
+        self.device: Fan = kitchen_fan
 
     def excecute(self):
+        self.device.low()
         self.device.start()
-        self.device.set_speed(40)
 
     def undo(self):
         self.device.stop()
 
 
 class KitchenFanOffCommand(Command):
-    def __init__(self, device: Fan) -> None:
-        self.device: Fan = device
+    def __init__(self) -> None:
+        self.device: Fan = kitchen_fan
 
     def excecute(self):
         self.device.stop()
 
     def undo(self):
+        self.device.low()
         self.device.start()
-        self.device.set_speed(40)
+
+
+class KitchenFanHighOnCommand(Command):
+    def __init__(self) -> None:
+        self.device: Fan = kitchen_fan
+        self._prev_speed: int = 0
+
+    def excecute(self):
+        self.device.high()
+        self.device.start()
+        self._prev_speed = self.device.get_speed()
+
+    def undo(self):
+        # self.device.stop()
+        print(f'предыдущая скорость {self._prev_speed}')
+        self.device.set_speed(self._prev_speed)
+
+
+class KitchenFanHighOffCommand(Command):
+    def __init__(self) -> None:
+        self.device: Fan = kitchen_fan
+        self._prev_speed: int = 0
+
+    def excecute(self):
+        # self.device.stop()
+        self.device.medium()
+        self._prev_speed = self.device.get_speed()
+
+    def undo(self):
+        # self.device.start()
+        # self.device.set_speed(40)
+        self.device.high()
+        self._prev_speed = self.device.get_speed()
+
+
+class MacroCommand(Command):
+    def __init__(self) -> None:
+        self.commands: list[Command]
+
+    def excecute(self):
+        for command in self.commands:
+            command.excecute()
+
+    def undo(self):
+        for command in self.commands:
+            command.undo()
+
+
+class PartyOnMacroCommand(MacroCommand):
+    def __init__(self) -> None:
+        self.commands = [StereoRadioOnCommand(), KitchenFanOnCommand()]
+
+
+class PartyOffMacroCommand(MacroCommand):
+    def __init__(self) -> None:
+        self.commands = [StereoRadioOffCommand(), KitchenFanOffCommand()]

@@ -32,16 +32,18 @@ class RemoutControl:
     def on_button_was_pressed(self, slot: int):
         """Запускает выполнение команды включения."""
         command = self._on_commands[slot]
+        print(f'Нажата кнопка ON команды {command}')
         command.excecute()
         self.undo_command = command
 
     def off_button_was_pressed(self, slot: int):
         """Запускает выполнение команды выключения."""
         command = self._off_commands[slot]
+        print(f'Нажата кнопка OFF команды {command}')
         command.excecute()
         self.undo_command = command
 
     def undo_button_was_pressed(self):
         """Запускает выполнение команды выключения."""
-        print('Галя, у нас отмена!')
+        print('Нажата кнопка UNDO. Галя, у нас отмена!')
         self.undo_command.undo()

@@ -42,16 +42,54 @@ class Stereo:
 
 
 class Fan:
+    HIGH: int = 3
+    MEDIUM: int = 2
+    LOW: int = 1
+    OFF: int = 0
+
     def __init__(self, location) -> None:
         self._name: str = f'Вентилятор "{location}"'
-        self.speed: int = 0
+        self.speed: int = self.__class__.LOW
 
     def start(self) -> None:
-        print(f'Устройство "{self._name}" включено')
+        print(
+            f'Устройство "{self._name}" включено\n'
+            f'Скорость: {self.speed}.'
+        )
+
+    def high(self) -> None:
+        self.speed = self.__class__.HIGH
+        print(f'Скорость устройства "{self._name}": {self.speed}')
+
+    def medium(self) -> None:
+        self.speed = self.__class__.MEDIUM
+        print(f'Скорость устройства "{self._name}": {self.speed}')
+
+    def low(self) -> None:
+        self.speed = self.__class__.LOW
+        print(f'Скорость устройства "{self._name}": {self.speed}')
+
+    def off(self) -> None:
+        self.speed = self.__class__.OFF
+        print(f'Скорость устройства "{self._name}": {self.speed}')
 
     def stop(self) -> None:
-        print(f'Устройство "{self._name}" выключено')
+        self.off()
+        print(
+            f'Устройство "{self._name}" выключено\n'
+            f'Скорость: {self.speed}.'
+        )
 
     def set_speed(self, speed: int) -> None:
         self.speed = speed
         print(f'Скорость устройства "{self._name}": {self.speed}')
+
+    def get_speed(self) -> int:
+        return self.speed
+
+
+# Конкретные устройства
+bedroom_light = Light('Спальня')
+kitchen_light = Light('Кухня')
+stereo = Stereo()
+kitchen_fan = Fan('Кухня')

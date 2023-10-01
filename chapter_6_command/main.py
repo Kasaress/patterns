@@ -16,10 +16,11 @@ def create_control_and_set_commands() -> RemoutControl:
 def start_command():
     """Имитирует нажатие на все кнопки пульта."""
     control = create_control_and_set_commands()
-    for i in range(1, SLOTS_COUNT):
+    for i in range(SLOTS_COUNT):
         control.on_button_was_pressed(i)
         control.off_button_was_pressed(i)
         control.undo_button_was_pressed()
+        print('______________________________')
 
 
 if __name__ == "__main__":

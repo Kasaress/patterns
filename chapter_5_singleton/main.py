@@ -1,6 +1,5 @@
-from support import print_delimiter
 from boiler import ChocolateBoiler
-
+from support import print_delimiter
 
 if __name__ == '__main__':
     # Пытаемся создать 2 бойлера
