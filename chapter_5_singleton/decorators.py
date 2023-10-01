@@ -1,4 +1,5 @@
 from functools import wraps
+
 from exceptions import DoubleCreateSingletonException
 
 
