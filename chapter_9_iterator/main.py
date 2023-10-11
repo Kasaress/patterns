@@ -9,7 +9,7 @@ def start_iterator():
     dinner_menu = DinnerMenu()
     for item in dinner:
         dinner_menu.add_item(*item)
-    waitress = Waitress(pancake_menu, dinner_menu)
+    waitress = Waitress([pancake_menu, dinner_menu])
     waitress.print_menu()
 
 

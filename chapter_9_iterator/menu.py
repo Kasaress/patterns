@@ -114,20 +114,13 @@ class DinnerMenu:
 
 
 class Waitress:
-    def __init__(
-        self,
-        pancake_menu: PancakeHouseMenu,
-        dinner_menu: DinnerMenu
-    ) -> None:
-        self.pancake_iterator = pancake_menu.creat_iterator()
-        self.dinner_iterator = dinner_menu.creat_iterator()
+    def __init__(self, menus) -> None:
+        self.menus: list = menus
 
     def _print_menu(self, iterator: Iterator) -> None:
         while iterator.has_next():
             print(iterator.next())
 
     def print_menu(self) -> None:
-        print('Меню завтраков:')
-        self._print_menu(self.pancake_iterator)
-        print('Меню обедов:')
-        self._print_menu(self.dinner_iterator)
+        for menu in self.menus:
+            self._print_menu(menu.creat_iterator())
