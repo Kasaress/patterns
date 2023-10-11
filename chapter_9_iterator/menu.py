@@ -1,5 +1,5 @@
-from array import array
-from collections import deque
+from collections import OrderedDict
+from typing import Protocol, Any
 
 
 class MenuItem:
@@ -31,9 +31,48 @@ class MenuItem:
         return f'{self.name} - {self.price} руб: {self.description.lower()}'
 
 
+class Iterator(Protocol):
+    _collection: Any
+    _cursor: int
+
+    def next(self) -> MenuItem:
+        pass
+
+    def has_next(self) -> bool:
+        pass
+
+
+class PancakeHouseIterator:
+    def __init__(self, collection: list[MenuItem]):
+        self._collection = collection
+        self._cursor = 0
+
+    def next(self) -> MenuItem:
+        current_item = self._collection[self._cursor]
+        self._cursor += 1
+        return current_item
+
+    def has_next(self) -> bool:
+        return self._cursor + 1 <= len(self._collection)
+
+
+class DinnerMenuIterator:
+    def __init__(self, collection: OrderedDict[str, MenuItem]):
+        self._collection = list(collection.values())
+        self._cursor = 0
+
+    def next(self) -> MenuItem:
+        current_item = self._collection[self._cursor]
+        self._cursor += 1
+        return current_item
+
+    def has_next(self) -> bool:
+        return self._cursor + 1 <= len(self._collection)
+
+
 class PancakeHouseMenu:
     def __init__(self) -> None:
-        self.menu_items: list[MenuItem | None] = []
+        self.menu_items: list[MenuItem] = []
 
     def add_item(
         self,
@@ -50,23 +89,45 @@ class PancakeHouseMenu:
         )
         self.menu_items.append(new_item)
 
-    def get_menu_items(self) -> list[MenuItem]:
-        return self.menu_items
+    def creat_iterator(self) -> PancakeHouseIterator:
+        return PancakeHouseIterator(self.menu_items)
 
 
 class DinnerMenu:
     def __init__(self) -> None:
-        self.max_size = 2
-        self.menu_items: deque[MenuItem] = deque(maxlen=self.max_size)
+        self.menu_items: OrderedDict[str, MenuItem] = OrderedDict()
+        self.max_size = 6
+        self.current_index = 0
 
     def add_item(
         self, name: str, description: str, vegetarian: bool, price: float
     ) -> None:
-        if len(self.menu_items) >= self.max_size:
-            print('Ошибка! Нельзя добавить новое блюдо в меню.')
-            return
-        new_item = MenuItem(name, description, vegetarian, price)
-        self.menu_items.append(new_item)
+        if len(self.menu_items) < self.max_size:
+            new_item = MenuItem(name, description, vegetarian, price)
+            self.menu_items[str(self.current_index)] = new_item  # намеренноstr
+            self.current_index += 1
+        else:
+            print("Меню уже достигло максимального размера")
 
-    def get_menu_items(self) -> list[MenuItem]:
-        return list(self.menu_items)
+    def creat_iterator(self) -> DinnerMenuIterator:
+        return DinnerMenuIterator(self.menu_items)
+
+
+class Waitress:
+    def __init__(
+        self,
+        pancake_menu: PancakeHouseMenu,
+        dinner_menu: DinnerMenu
+    ) -> None:
+        self.pancake_iterator = pancake_menu.creat_iterator()
+        self.dinner_iterator = dinner_menu.creat_iterator()
+
+    def _print_menu(self, iterator: Iterator) -> None:
+        while iterator.has_next():
+            print(iterator.next())
+
+    def print_menu(self) -> None:
+        print('Меню завтраков:')
+        self._print_menu(self.pancake_iterator)
+        print('Меню обедов:')
+        self._print_menu(self.dinner_iterator)
