@@ -1,0 +1,3 @@
+
+class ComponentAttributeError(Exception):
+    pass
